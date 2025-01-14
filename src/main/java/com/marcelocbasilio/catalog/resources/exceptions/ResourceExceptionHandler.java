@@ -1,6 +1,6 @@
 package com.marcelocbasilio.catalog.resources.exceptions;
 
-import com.marcelocbasilio.catalog.services.exceptions.EntityNotFoundException;
+import com.marcelocbasilio.catalog.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +12,8 @@ import java.time.Instant;
 @ControllerAdvice
 public class ResourceExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException exception, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException exception, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setTimestamp(Instant.now());
         error.setStatus(HttpStatus.NOT_FOUND.value());

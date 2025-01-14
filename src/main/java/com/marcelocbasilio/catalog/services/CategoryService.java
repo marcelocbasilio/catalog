@@ -3,7 +3,8 @@ package com.marcelocbasilio.catalog.services;
 import com.marcelocbasilio.catalog.dto.CategoryDto;
 import com.marcelocbasilio.catalog.entities.Category;
 import com.marcelocbasilio.catalog.repositories.CategoryRepository;
-import com.marcelocbasilio.catalog.services.exceptions.EntityNotFoundException;
+import com.marcelocbasilio.catalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
-        Category category = optionalCategory.orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+        Category category = optionalCategory.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return new CategoryDto(category);
     }
 
@@ -40,5 +41,17 @@ public class CategoryService {
         category.setName(categoryDto.getName());
         category = categoryRepository.save(category);
         return new CategoryDto(category);
+    }
+
+    @Transactional
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
+        try {
+            Category category = categoryRepository.getReferenceById(id);
+            category.setName(categoryDto.getName());
+            category = categoryRepository.save(category);
+            return new CategoryDto(category);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        }
     }
 }

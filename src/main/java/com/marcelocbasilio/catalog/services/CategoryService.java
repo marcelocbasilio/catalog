@@ -1,11 +1,13 @@
 package com.marcelocbasilio.catalog.services;
 
+import com.marcelocbasilio.catalog.dto.CategoryDto;
 import com.marcelocbasilio.catalog.entities.Category;
 import com.marcelocbasilio.catalog.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -17,7 +19,9 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> findAll() {
+        List<Category> categories = categoryRepository.findAll();
+        // map(CategoryDto::new) = map(x -> new CategoryDto(x))
+        return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 }

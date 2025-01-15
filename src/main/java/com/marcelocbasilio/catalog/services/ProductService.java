@@ -11,7 +11,7 @@ import com.marcelocbasilio.catalog.services.exceptions.ResourceNotFoundException
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +39,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> findAllPaged(PageRequest pageRequest) {
-        Page<Product> products = productRepository.findAll(pageRequest);
+    public Page<ProductDto> findAllPaged(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
         return products.map(ProductDto::new);
     }
 

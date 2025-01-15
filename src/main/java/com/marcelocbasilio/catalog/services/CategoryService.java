@@ -7,6 +7,8 @@ import com.marcelocbasilio.catalog.services.exceptions.DatabaseException;
 import com.marcelocbasilio.catalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,12 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
         // map(CategoryDto::new) = map(x -> new CategoryDto(x))
         return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
+        Page<Category> categories = categoryRepository.findAll(pageRequest);
+        return categories.map(CategoryDto::new);
     }
 
     @Transactional(readOnly = true)
